@@ -1,0 +1,11 @@
+**/node_modules/
+node_modules
+# Logs
+logs
+*.log
+**/*.log
+
+dist
+.idea
+# while testing npm5
+package-lock.json
