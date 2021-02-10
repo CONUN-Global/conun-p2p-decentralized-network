@@ -5,6 +5,26 @@ class ProtocolIO {
     constructor(libp2p) {
         this.libp2p = libp2p;
     }
+    /**
+     * sign (protocol, peerId, message) Sign to network
+     * protocol -> to sign end-point
+     * bootId -> bootstrap peer id
+     * message {
+     *     sign: send token to sign to network
+     * }
+     */
+    async sign (protocol, bootId, message) {
+        message = message.slice(0, -1)
+            const connection = this.libp2p.connectionManager.get(bootId)
+            if (!connection) return
+            try {
+                const { stream } = await connection.newStream([protocol])
+                await this._send(message, stream)
+            } catch (err) {
+                console.error('Could not negotiate chat protocol stream with peer', err)
+            }
+
+    }
 
     async link (address, callback) {
         this.libp2p.handle(address, async ({ connection, stream }) => {

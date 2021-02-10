@@ -1,5 +1,7 @@
+const PubsubChat = require('./helper/topic')
+
 class TopicRouterIo {
-    constructor(libp2p, PubsubChat) {
+    constructor(libp2p) {
         this.libp2p = libp2p;
         this.pubsubChat = null;
         this.PubsubChat = PubsubChat;
@@ -13,7 +15,7 @@ class TopicRouterIo {
     }
 
 
-    pub(topic, event, message) {
+    push(topic, event, message) {
         if (this.pubsubChat.checkCommand(message)) return
         this.pubsubChat.topic = topic
         this.pubsubChat.send(event, message, (err) => {
