@@ -14,15 +14,15 @@ const MDNS = require('libp2p-mdns')
 const KadDHT = require('libp2p-kad-dht')
 // PubSub implementation
 const Gossipsub = require('libp2p-gossipsub')
+const PeerId = require('peer-id')
+const idJSON = require('../id.json')
 
-const config = () => {
-    return {
+
+const config = (peerId, listenAddr, bootstrapAPIs) => {
+    return Libp2p.create({
+        peerId,
         addresses: {
-            listen: [
-                '/ip4/0.0.0.0/tcp/0',
-                '/ip4/0.0.0.0/tcp/0/ws',
-                `/ip4/127.0.0.1/tcp/15555/ws/p2p-webrtc-star/`
-            ]
+            listen: listenAddr
         },
         modules: {
             transport: [ TCP, Websockets, WebrtcStar ],
@@ -40,7 +40,7 @@ const config = () => {
             },
             peerDiscovery: {
                 bootstrap: {
-                    list: [ '/ip4/127.0.0.1/tcp/63785/ipfs/QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d' ]
+                    list: bootstrapAPIs
                 }
             },
             dht: {
@@ -50,11 +50,19 @@ const config = () => {
                 }
             }
         }
-    }
+    })
 }
 
-module.exports.createNode = async () => {
-    const node = await Libp2p.create(config())
+module.exports.createNode = async (bootstrapAPI) => {
+    const peerId = await PeerId.createFromJSON(idJSON)
+    const addrs = [
+        '/ip4/0.0.0.0/tcp/0',
+        '/ip4/0.0.0.0/tcp/0/ws',
+        `/ip4/${bootstrapAPI.server}/tcp/15555/ws/p2p-webrtc-star/`
+    ]
+    const bootstrap = []
+    bootstrap.push(`/ip4/${bootstrapAPI.server}/tcp/63785/ipfs/${bootstrapAPI.address}`)
+    const node = await config(peerId, addrs, bootstrap)
     await node.start()
     return node
 }

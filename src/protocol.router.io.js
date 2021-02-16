@@ -1,4 +1,5 @@
 const pipe = require('it-pipe')
+const PeerId = require('peer-id')
 
 class ProtocolIO {
 
@@ -46,6 +47,22 @@ class ProtocolIO {
                 console.error(err)
             }
         })
+    }
+
+    async _pushOne(protocol, event, destination, message) {
+        const peers = this.libp2p.peerStore.get(peerId)
+        let peerID = peers.get(destination).id
+        let peerId = await PeerId.isPeerId(peerID);
+
+        const connection = this.libp2p.connectionManager.get(peerID)
+        if (!connection) return
+
+        try {
+            const { stream } = await connection.newStream([protocol])
+            await this._send(message, stream)
+        } catch (err) {
+            console.error('Could not negotiate chat protocol stream with peer', err)
+        }
     }
 
     push (protocol, event, message) {
