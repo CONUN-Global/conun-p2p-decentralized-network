@@ -49,10 +49,11 @@ class ProtocolIO {
         })
     }
 
-    async _pushOne(protocol, event, destination, message) {
-        const peers = this.libp2p.peerStore.get(peerId)
-        let peerID = peers.get(destination).id
-        let peerId = await PeerId.isPeerId(peerID);
+    async pin(protocol, event, destination, message) {
+        const peers = this.libp2p.peerStore.peers
+        const peerID = peers.get(destination).id
+        const peerId = await PeerId.isPeerId(peerID);
+        if(!peerId) return
 
         const connection = this.libp2p.connectionManager.get(peerID)
         if (!connection) return
