@@ -4,9 +4,7 @@ const TopicIO =  require('./src/topic.router.io')
 const ProtocolIO = require('./src/protocol.router.io')
 const auth = require('./src/crypto/auth')
 
-
 ;(async () => {
-
 
   const libp2p = await p2pConfig.createNode({server: '192.168.100.105', address: 'QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d'});
 
@@ -33,9 +31,9 @@ const auth = require('./src/crypto/auth')
    * res(from, message)
    **/
 
-  // await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
-  //   console.log('protocol res: ', res);
-  // })
+  await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
+    console.log('protocol res: ', res);
+  })
 
   /**
    * Type: Protocol
@@ -43,9 +41,9 @@ const auth = require('./src/crypto/auth')
    * protocol.push (url/content/jobId, event, message)
    * res(from, message)
    **/
-  // setInterval(() => {
-  //   protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
-  // }, 3000)
+  setInterval(() => {
+    protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
+  }, 3000)
 
 
   /**
@@ -54,10 +52,10 @@ const auth = require('./src/crypto/auth')
    * protocol.pin (url/content/jobId, event, destination, message)
    * res(from, message)
    **/
- //  setInterval(async function () {
- //   await protocol.pin(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', 'QmNNp4eaHgebbAja8dDYcLrYVBzqNsiBS99cZSgSvtfqVA', 'AAAA')
- // }, 3000)
- //
+   //  setInterval(async function () {
+   //   await protocol.pin(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', 'QmNNp4eaHgebbAja8dDYcLrYVBzqNsiBS99cZSgSvtfqVA', 'AAAA')
+   // }, 3000)
+   //
 
   /**
    * Type: Router

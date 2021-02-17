@@ -16,9 +16,13 @@ const KadDHT = require('libp2p-kad-dht')
 const Gossipsub = require('libp2p-gossipsub')
 const PeerId = require('peer-id')
 const idJSON = require('../id.json')
+const Protector  = require('libp2p/src/pnet')
 
+const fs = require('fs')
+var path = require('path')
+const uint8arrayFromString = require('uint8arrays/from-string')
 
-const config = (peerId, listenAddr, bootstrapAPIs) => {
+const config = (peerId, listenAddr, bootstrapAPIs, swarmKey) => {
     return Libp2p.create({
         peerId,
         addresses: {
@@ -30,7 +34,8 @@ const config = (peerId, listenAddr, bootstrapAPIs) => {
             connEncryption: [ NOISE ],
             peerDiscovery: [ Bootstrap, MDNS ],
             dht: KadDHT,
-            pubsub: Gossipsub
+            pubsub: Gossipsub,
+            connProtector: new Protector(uint8arrayFromString(swarmKey))
         },
         config: {
             transport : {
@@ -62,7 +67,9 @@ module.exports.createNode = async (bootstrapAPI) => {
     ]
     const bootstrap = []
     bootstrap.push(`/ip4/${bootstrapAPI.server}/tcp/63785/ipfs/${bootstrapAPI.address}`)
-    const node = await config(peerId, addrs, bootstrap)
+    const swarmKey = await fs.readFileSync(path.join(__dirname, '../swarm.key'), 'utf8')
+    console.log(swarmKey)
+    const node = await config(peerId, addrs, bootstrap, swarmKey)
     await node.start()
     return node
 }
