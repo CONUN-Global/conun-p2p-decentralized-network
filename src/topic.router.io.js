@@ -14,13 +14,16 @@ class TopicRouterIo {
         });
     }
 
-
     push(topic, event, message) {
         if (this.pubsubChat.checkCommand(message)) return
         this.pubsubChat.topic = topic
         this.pubsubChat.send(event, message, (err) => {
             if (err) console.error('Could not publish chat', err)
         })
+    }
+
+    getTopic () {
+       return this.pubsubChat.getTopic();
     }
 
 }

@@ -110,6 +110,25 @@ class Topic {
     this.libp2p.pubsub.unsubscribe(this.topic)
   }
 
+  /**
+   * Type: Get Topic
+   * get channel name
+   **/
+  getTopic () {
+    return this.libp2p.pubsub.getTopics();
+  }
+
+  // leaveTopic (topic) {
+  //   this.topic = topic;
+  //   this.libp2p.pubsub.unsubscribe(this.topic)
+  //   this.libp2p.pubsub.removeListener(this.topic, this._onMessage)
+  //   console.log('get Topic List: >>', this.libp2p.pubsub.getTopics())
+  // }
+  //
+  // validation (message) {
+  //   return this.libp2p.pubsub.validate(message);
+  // }
+
   _onMessage (message) {
     try {
       const request = Request.decode(message.data)

@@ -3,11 +3,12 @@ const p2pConfig = require('./config/p2p.config')
 const TopicIO =  require('./src/topic.router.io')
 const ProtocolIO = require('./src/protocol.router.io')
 const auth = require('./src/crypto/auth')
+const fs = require('fs');
+const path = require('path');
 
 ;(async () => {
-
-  const libp2p = await p2pConfig.createNode({server: '192.168.100.105', address: 'QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d'});
-
+  const swarmKey = await fs.readFileSync(path.join(__dirname, './swarm.key'), 'utf8')
+  const libp2p = await p2pConfig.createNode({server: '192.168.100.105', address: 'QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d'}, swarmKey);
   libp2p.connectionManager.on('peer:connect', (connection) => {
     console.info(`Connected to ${connection.remotePeer.toB58String()}!`)
   })
@@ -31,19 +32,20 @@ const auth = require('./src/crypto/auth')
    * res(from, message)
    **/
 
-  await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
-    console.log('protocol res: ', res);
-  })
+  // await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
+  //   console.log('protocol res: ', res);
+  // })
+  //
+  // /**
+  //  * Type: Protocol
+  //  * Method: Send
+  //  * protocol.push (url/content/jobId, event, message)
+  //  * res(from, message)
+  //  **/
+  // setInterval(() => {
+  //   protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
+  // }, 3000)
 
-  /**
-   * Type: Protocol
-   * Method: Send
-   * protocol.push (url/content/jobId, event, message)
-   * res(from, message)
-   **/
-  setInterval(() => {
-    protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
-  }, 3000)
 
 
   /**
@@ -64,9 +66,9 @@ const auth = require('./src/crypto/auth')
    * res(from, message, event)
    **/
 
-  // router.link(`/p2p/router/1.0.0/${content}/${jobID}`, (res) => {
-  //   console.log('async listener', res)
-  // })
+  router.link(`/p2p/router/1.0.0/${content}/${jobID}`, (res) => {
+    console.log('async listener', res)
+  })
 
   /**
    * Type: Router
@@ -75,8 +77,9 @@ const auth = require('./src/crypto/auth')
    * res(from, message, event)
    **/
 
-  // setInterval(() =>  {
-  //     router.push(`/p2p/router/1.0.0/${content}/${jobID}`, 'send-event','Hey Man 2')
-  // }, 3000)
+  setInterval(() =>  {
+      router.push(`/p2p/router/1.0.0/${content}/${jobID}`, 'send-event','message from node - 1')
+  }, 3000)
+
 
 })()

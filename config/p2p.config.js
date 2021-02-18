@@ -58,7 +58,7 @@ const config = (peerId, listenAddr, bootstrapAPIs, swarmKey) => {
     })
 }
 
-module.exports.createNode = async (bootstrapAPI) => {
+module.exports.createNode = async (bootstrapAPI, swarmKey) => {
     const peerId = await PeerId.createFromJSON(idJSON)
     const addrs = [
         '/ip4/0.0.0.0/tcp/0',
@@ -67,8 +67,6 @@ module.exports.createNode = async (bootstrapAPI) => {
     ]
     const bootstrap = []
     bootstrap.push(`/ip4/${bootstrapAPI.server}/tcp/63785/ipfs/${bootstrapAPI.address}`)
-    const swarmKey = await fs.readFileSync(path.join(__dirname, '../swarm.key'), 'utf8')
-    console.log(swarmKey)
     const node = await config(peerId, addrs, bootstrap, swarmKey)
     await node.start()
     return node
