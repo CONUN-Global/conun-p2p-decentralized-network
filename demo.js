@@ -1,14 +1,15 @@
 'use strict'
-const p2pConfig = require('./config/p2p.config')
-const TopicIO =  require('./src/topic.router.io')
-const ProtocolIO = require('./src/protocol.router.io')
-const auth = require('./src/crypto/auth')
+// const p2pConfig = require('./config/p2p.config')
+// const TopicIO =  require('./src/topic.router.io')
+// const ProtocolIO = require('./src/protocol.router.io')
+// const auth = require('./src/crypto/auth')
+const CONUNP2P = require('./src/index');
 const fs = require('fs');
 const path = require('path');
 
 ;(async () => {
   const swarmKey = await fs.readFileSync(path.join(__dirname, './swarm.key'), 'utf8')
-  const libp2p = await p2pConfig.createNode({server: '192.168.100.105', address: 'QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d'}, swarmKey);
+  const libp2p = await CONUNP2P.Config.createNode({server: '192.168.100.105', address: 'QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d'}, swarmKey);
   libp2p.connectionManager.on('peer:connect', (connection) => {
     console.info(`Connected to ${connection.remotePeer.toB58String()}!`)
   })
@@ -19,8 +20,8 @@ const path = require('path');
    * TopicIO - router
    **/
 
-  const router = new TopicIO(libp2p);
-  const protocol = new ProtocolIO(libp2p);
+  const router = new CONUNP2P.TopicIO(libp2p);
+  const protocol = new CONUNP2P.ProtocolIO(libp2p);
 
   let content = 'image'
   let jobID = 'e157f340cd75851397a9d248b367008949dae2'
@@ -32,19 +33,19 @@ const path = require('path');
    * res(from, message)
    **/
 
-  // await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
-  //   console.log('protocol res: ', res);
-  // })
-  //
-  // /**
-  //  * Type: Protocol
-  //  * Method: Send
-  //  * protocol.push (url/content/jobId, event, message)
-  //  * res(from, message)
-  //  **/
-  // setInterval(() => {
-  //   protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
-  // }, 3000)
+  await protocol.link(`/p2p/protocol/0.0.1/${content}/${jobID}`, (res) => {
+    console.log('protocol res: ', res);
+  })
+
+  /**
+   * Type: Protocol
+   * Method: Send
+   * protocol.push (url/content/jobId, event, message)
+   * res(from, message)
+   **/
+  setInterval(() => {
+    protocol.push(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', '123456')
+  }, 3000)
 
 
 
@@ -54,10 +55,10 @@ const path = require('path');
    * protocol.pin (url/content/jobId, event, destination, message)
    * res(from, message)
    **/
-   //  setInterval(async function () {
-   //   await protocol.pin(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', 'QmNNp4eaHgebbAja8dDYcLrYVBzqNsiBS99cZSgSvtfqVA', 'AAAA')
-   // }, 3000)
-   //
+    setInterval(async function () {
+     await protocol.pin(`/p2p/protocol/0.0.1/${content}/${jobID}`, '', 'QmNNp4eaHgebbAja8dDYcLrYVBzqNsiBS99cZSgSvtfqVA', 'AAAA')
+   }, 3000)
+
 
   /**
    * Type: Router

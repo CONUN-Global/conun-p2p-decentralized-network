@@ -7,5 +7,7 @@ logs
 
 dist
 .idea
-# while testing npm5
+
 package-lock.json
+swarm.key
+id.json

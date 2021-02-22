@@ -1,8 +1,8 @@
 {
-  "name": "bootstrap",
+  "name": "@conun-global/conun-p2p-network",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Conun Decentralized Network",
+  "main": "demo.js",
   "dependencies": {
     "ipfs": "^0.53.2",
     "it-all": "^1.0.4",
@@ -25,10 +25,18 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js",
+    "start": "node demo.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Jamshid",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CONUN-Global/conun-p2p-decentralized-network.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CONUN-Global/conun-p2p-decentralized-network/issues"
+  },
+  "homepage": "https://github.com/CONUN-Global/conun-p2p-decentralized-network#readme"
 }
