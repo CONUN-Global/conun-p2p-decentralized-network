@@ -3,7 +3,7 @@
 ![NPM](https://img.shields.io/npm/v/npm)
 <br/>
 <p align="center">
-  <img alt="CONUN preview" src="https://conun.io/img/conun_logo_big.png" height="60" />
+  <img alt="CONUN preview" src="https://raw.githubusercontent.com/CONUN-Global/conun-homepage/fcc7721617445e0fa571ac00bc8463ee3716ada8/src/assets/icons/conun-logo.svg" height="60" />
   <br><br>
   <p align="center">CONUN DECENTRALIZED NETWORK (P2P) </p>
 
